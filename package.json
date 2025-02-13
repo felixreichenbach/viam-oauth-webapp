@@ -25,6 +25,8 @@
 		"vite": "^6.0.0"
 	},
 	"dependencies": {
-		"pkce-challenge": "^4.1.0"
+		"@fusionauth/typescript-client": "^1.55.0",
+		"pkce-challenge": "^4.1.0",
+		"svelte-kit-cookie-session": "^4.1.1"
 	}
 }
