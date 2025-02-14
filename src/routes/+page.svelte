@@ -1,18 +1,12 @@
 <script lang="ts">
-	import type { PageProps } from './$types';
-	// Get data from backend
-	let { data }: PageProps = $props();
-	$inspect(data);
+	const CLIENT_ID = import.meta.env.VITE_FUSION_AUTH_CLIENT_ID;
+	const LOGIN_CALLBACK = 'http://localhost:5173/callback';
 
 	const href =
-		data.session.fusionAuthURL +
-		'/oauth2/authorize?client_id=' +
-		data.session.clientId +
-		'&response_type=code&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fapi%2Foauth-redirect&scope=offline_access&state=' +
-		data.session.stateValue +
-		'&code_challenge=' +
-		data.session.challenge +
-		'&code_challenge_method=S256';
+		'https://auth.viam.com/oauth2/authorize?client_id=' +
+		CLIENT_ID +
+		'&response_type=code&redirect_uri=' +
+		encodeURI(LOGIN_CALLBACK);
 </script>
 
 <h1>Welcome to Viam OAuth</h1>
