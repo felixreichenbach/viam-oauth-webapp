@@ -2,8 +2,21 @@ import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
 import pkceChallenge from 'pkce-challenge';
 
-const fusionAuthURL = import.meta.env.VITE_FUSION_AUTH_URL;
+const fusionAuthBaseURL = import.meta.env.VITE_FUSION_AUTH_URL;
 const clientId = import.meta.env.VITE_FUSION_AUTH_CLIENT_ID;
+
+/*
+Maybe not needed if set in the load function
+export const actions = {
+	default: async ({ locals }) => {
+		//const { user, fusionAuthURL = fusionAuthBaseURL } = locals.session.data;
+
+		await locals.session.set({ fusionAuthURL: fusionAuthBaseURL, clientId: clientId });
+
+		return {};
+	}
+};
+*/
 
 export const load: PageServerLoad = async (event) => {
 	console.log(event);
@@ -17,21 +30,22 @@ export const load: PageServerLoad = async (event) => {
 		Math.random().toString(36).substring(2, 15) +
 		Math.random().toString(36).substring(2, 15);
 
-	// Store the PKCE verifier in the session
-	session.data.stateValue = stateValue;
-
 	//generate the pkce challenge/verifier dict
 	const pkce_pair = await pkceChallenge();
 	// Store the PKCE verifier in session
-	session.data.verifier = pkce_pair['code_verifier'];
 	const challenge = pkce_pair['code_challenge'];
 
-	const post = {
-		user: session.data.user,
-		clientId: clientId,
-		challenge: challenge,
+	// Set the session cookie
+	session.set({
 		stateValue: stateValue,
-		fusionAuthURL: fusionAuthURL
+		verifier: pkce_pair['code_verifier'],
+		fusionAuthURL: fusionAuthBaseURL,
+		clientId: clientId,
+		challenge: challenge
+	});
+
+	const post = {
+		session: session.data
 	};
 	if (post) {
 		return post;
