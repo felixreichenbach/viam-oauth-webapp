@@ -9,6 +9,7 @@ declare module 'svelte-kit-sessions' {
 		stateValue?: string;
 		user?: string;
 		verifier?: string;
+		accessToken?: string;
 	}
 }
 

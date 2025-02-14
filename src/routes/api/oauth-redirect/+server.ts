@@ -1,8 +1,11 @@
 import type { RequestHandler } from '@sveltejs/kit';
 import { FusionAuthClient } from '@fusionauth/typescript-client';
-import { VITE_CLIENT_ID, VITE_CLIENT_SECRET, VITE_BASE_URL } from '$env/static/private';
 
-const client = new FusionAuthClient('noapikeyneeded', VITE_BASE_URL);
+const FUSION_AUTH_BASE_URL = import.meta.env.VITE_FUSION_AUTH_URL;
+const FUSION_AUTH_CLIENT_ID = import.meta.env.VITE_FUSION_AUTH_CLIENT_ID;
+const FUSION_AUTH_CLIENT_SECRET = import.meta.env.VITE_FUSION_AUTH_CLIENT_SECRET;
+
+const client = new FusionAuthClient('noapikeyneeded', FUSION_AUTH_BASE_URL);
 
 export const GET: RequestHandler = async ({ url, locals }) => {
 	const code = url.searchParams.get('code');
@@ -11,12 +14,13 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 	if (!code || !verifier) {
 		return new Response('Missing code or verifier', { status: 400 });
 	}
+
 	try {
 		const response = await client.exchangeOAuthCodeForAccessTokenUsingPKCE(
 			code,
-			VITE_CLIENT_ID,
-			VITE_CLIENT_SECRET,
-			'http://localhost:5173/auth',
+			FUSION_AUTH_CLIENT_ID,
+			FUSION_AUTH_CLIENT_SECRET,
+			'http://localhost:5173/api/oauth-redirect',
 			verifier
 		);
 
@@ -27,7 +31,12 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 		locals.session.data.accessToken = accessToken;
 
 		const userResponse = await client.retrieveUserUsingJWT(accessToken);
-		locals.session.data.user = userResponse.response.user;
+		// Check if user is provided in the response
+		if (!userResponse.response.user?.email) {
+			return new Response('No user email provided', { status: 500 });
+		} else {
+			locals.session.data.user = userResponse.response.user.email;
+		}
 
 		return new Response(null, {
 			status: 302,
