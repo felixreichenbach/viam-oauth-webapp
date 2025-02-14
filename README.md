@@ -1,18 +1,16 @@
-# sv
+# Viam Svelte OAuth Web Application Starter Kit
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+This basic Svelte web application is supposed to help you quickly build a frontend application allowing you to use OAuth for identification for accessing Viam machine and cloud APIs.
 
-## Creating a project
+# Svelte Application
 
-If you're seeing this, you've probably already done this step. Congrats!
+New to Svelte?
 
-```bash
-# create a new project in the current directory
-npx sv create
+Start here:
 
-# create a new project in my-app
-npx sv create my-app
-```
+1. [Svelte Introduction](https://svelte.dev/docs/kit/introduction)
+2. [Svelte Data Flow Video](Great Svelte Data Flow Explanation
+   https://youtu.be/j3aliHghr3E))
 
 ## Developing
 
@@ -36,3 +34,45 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+# Viam OAuth
+
+New to Viam OAuth?
+
+Start here: [Viam OAuth](https://docs.viam.com/manage/manage/oauth/)
+
+## Useful Viam OAuth CLI Commands
+
+Create Viam OAuth Application:
+
+```bash
+viam organization auth-service oauth-app create \
+--org-id=<VIAM ORG ID> \
+--client-name="Viam OAuth Template App" \
+--client-authentication=required \
+--enabled-grants="password, authorization_code" \
+--logout-uri="http://localhost:5173/logout" \
+--origin-uris="http://localhost:5173" \
+--redirect-uris="http://localhost:5173/callback" \
+--pkce=not_required \
+--url-validation=allow_wildcards
+```
+
+> **Note:** Make sure to store the received credentials `Client ID` and `Client Secret` securely!
+
+Update Viam OAuth Application:
+
+```bash
+viam organization auth-service oauth-app update \
+--org-id=<VIAM ORG ID> \
+--client-id=<VIAM OAUTH CLIENT ID> \
+--<KEY>=<VALUE TO UPDATE>
+```
+
+Read Existing OAuth Application:
+
+```bash
+viam organization auth-service oauth-app read \
+--org-id=<VIAM ORG ID> \
+--client-id=<VIAM OAUTH CLIENT ID>
+```
