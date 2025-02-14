@@ -16,7 +16,7 @@ export const GET: RequestHandler = async ({ url, locals }) => {
 			code,
 			VITE_CLIENT_ID,
 			VITE_CLIENT_SECRET,
-			'http://localhost:3000/auth',
+			'http://localhost:5173/auth',
 			verifier
 		);
 
