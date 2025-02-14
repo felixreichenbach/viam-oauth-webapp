@@ -9,7 +9,7 @@ New to Svelte?
 Start here:
 
 1. [Svelte Introduction](https://svelte.dev/docs/kit/introduction)
-2. [Great Svelte Data Flow Video](https://youtu.be/j3aliHghr3E))
+2. [Great Svelte Data Flow Video](https://youtu.be/j3aliHghr3E)
 
 ## Developing
 
