@@ -10,7 +10,6 @@ export const GET: RequestHandler = async (event) => {
 	if (!code) {
 		return new Response('Missing code', { status: 400 });
 	}
-	console.log(code);
 
 	const client = new FusionAuthClient('noapikeyneeded', FUSION_AUTH_BASE_URL);
 	try {
