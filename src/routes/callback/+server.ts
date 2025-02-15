@@ -10,7 +10,6 @@ export const GET: RequestHandler = async (event) => {
 	if (!code) {
 		return new Response('Missing code', { status: 400 });
 	}
-	console.log(code);
 
 	const client = new FusionAuthClient('noapikeyneeded', FUSION_AUTH_BASE_URL);
 	try {
@@ -32,7 +31,8 @@ export const GET: RequestHandler = async (event) => {
 		return new Response(null, {
 			status: 302,
 			headers: {
-				location: `/?access_token=${accessToken}`
+				'Set-Cookie': `access_token=${accessToken}; Path=/; Secure; SameSite=Strict`,
+				Location: '/'
 			}
 		});
 	} catch (err) {
