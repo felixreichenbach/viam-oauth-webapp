@@ -31,7 +31,8 @@ export const GET: RequestHandler = async (event) => {
 		return new Response(null, {
 			status: 302,
 			headers: {
-				location: `/?access_token=${accessToken}`
+				'Set-Cookie': `access_token=${accessToken}; Path=/; Secure; SameSite=Strict`,
+				Location: '/'
 			}
 		});
 	} catch (err) {
