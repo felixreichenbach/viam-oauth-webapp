@@ -22,7 +22,7 @@ viam organization auth-service oauth-app create \
 --enabled-grants="password, authorization_code" \
 --logout-uri="http://localhost:5173/logout" \
 --origin-uris="http://localhost:5173" \
---redirect-uris="http://localhost:5173/callback" \
+--redirect-uris="http://localhost:5173/auth" \
 --pkce=not_required \
 --url-validation=allow_wildcards
 ```
