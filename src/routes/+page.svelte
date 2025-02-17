@@ -1,14 +1,19 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import * as VIAM from '@viamrobotics/sdk';
+	import {
+		PUBLIC_FUSION_AUTH_CLIENT_ID,
+		PUBLIC_FUSION_AUTH_URL,
+		PUBLIC_LOGIN_CALLBACK
+	} from '$env/static/public';
 
-	const CLIENT_ID = import.meta.env.VITE_FUSION_AUTH_CLIENT_ID;
-	const LOGIN_CALLBACK = 'http://localhost:5173/callback';
-	const href =
-		'https://auth.viam.com/oauth2/authorize?client_id=' +
-		CLIENT_ID +
-		'&response_type=code&redirect_uri=' +
-		encodeURI(LOGIN_CALLBACK);
+	const href = encodeURI(
+		PUBLIC_FUSION_AUTH_URL +
+			'/oauth2/authorize?client_id=' +
+			PUBLIC_FUSION_AUTH_CLIENT_ID +
+			'&response_type=code&redirect_uri=' +
+			PUBLIC_LOGIN_CALLBACK
+	);
 
 	let orgID: string | undefined;
 	let tabularData: any | undefined;
@@ -46,7 +51,7 @@
 	}
 
 	/**
-	 * Retrieves the organization ID.
+	 * Retrieves the Viam organization ID.
 	 * @returns A promise that resolves with the organization ID.
 	 */
 	async function getOrgID() {
@@ -57,7 +62,7 @@
 	}
 
 	/**
-	 * Retrieves the tabular data for the specified organization ID.
+	 * Retrieves tabular data from the specified organization.
 	 * @param orgID - The organization ID.
 	 * @returns A promise that resolves with the tabular data.
 	 */
