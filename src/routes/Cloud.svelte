@@ -47,7 +47,7 @@
 	});
 </script>
 
-<strong> My Viam Cloud</strong>
+<h2>My Viam Cloud</h2>
 {#await connectCloud(accessToken)}
 	<p>Connecting...</p>
 {:then client}
@@ -57,13 +57,13 @@
 		{#await getOrgID(client)}
 			<p>Getting data...</p>
 		{:then id}
-			<p>My Organization ID:</p>
+			<h3>My Organization ID:</h3>
 			<pre>{id}</pre>
 		{/await}
 		{#await getData(client, orgID)}
 			<p>Getting data...</p>
 		{:then data}
-			<p>My Tabular Data:"</p>
+			<h3>My Tabular Data:"</h3>
 			<pre>{JSON.stringify(data, null, 2)}</pre>
 		{/await}
 	{/if}

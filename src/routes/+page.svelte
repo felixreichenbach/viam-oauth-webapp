@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { onMount, setContext } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { jwtDecode } from 'jwt-decode';
 	import {
 		PUBLIC_FUSION_AUTH_CLIENT_ID,
 		PUBLIC_FUSION_AUTH_URL,
@@ -31,9 +33,25 @@
 		if (parts.length === 2) return parts.pop()?.split(';').shift();
 	}
 
+	// validate JWT access token
+	// TODO: Check if there is a better way such as catch from connection etc.
+	function isTokenValid(token: string): boolean {
+		try {
+			const decoded: any = jwtDecode(token);
+			const currentTime = Math.floor(Date.now() / 1000);
+			return decoded.exp > currentTime;
+		} catch (e) {
+			return false;
+		}
+	}
+
 	onMount(async () => {
 		accessToken = getCookie('access_token');
 		if (accessToken) {
+			if (!isTokenValid(accessToken)) {
+				accessToken = '';
+				goto('/');
+			}
 			setContext('accessToken', accessToken);
 		}
 	});
