@@ -5,6 +5,7 @@
 
 	import { PUBLIC_MACHINE_URL } from '$env/static/public';
 	import Image from './Image.svelte';
+	import Video from './Video.svelte';
 
 	const host = PUBLIC_MACHINE_URL;
 	let accessToken: string;
@@ -49,7 +50,10 @@
 	{:catch error}
 		<p>Failed to get metadata from Viam Machine.</p>
 	{/await}
+	<h3>Camera Image</h3>
 	<Image {machineClient} />
+	<h3>Camera Video Stream</h3>
+	<Video {machineClient} cameraName="camera" />
 {:catch error}
 	<p>Failed to connect to Viam Machine.</p>
 	<p>{error.message}</p>

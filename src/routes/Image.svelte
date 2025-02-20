@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount, getContext } from 'svelte';
 	import * as VIAM from '@viamrobotics/sdk';
 
 	export let machineClient: VIAM.RobotClient;
@@ -11,7 +10,6 @@
 	}
 </script>
 
-<h3>Camera Image</h3>
 {#await getImage('camera')}
 	<p>Getting image...</p>
 {:then image}
