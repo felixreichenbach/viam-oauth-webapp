@@ -26,6 +26,7 @@
 	},
 	"dependencies": {
 		"@fusionauth/typescript-client": "^1.55.0",
-		"@viamrobotics/sdk": "^0.35.2"
+		"@viamrobotics/sdk": "^0.35.2",
+		"jwt-decode": "^4.0.0"
 	}
 }
