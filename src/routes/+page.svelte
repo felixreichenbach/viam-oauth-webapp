@@ -20,8 +20,6 @@
 
 	let accessToken: string | undefined;
 
-	//setContext('accessToken', 'accessToken');
-
 	/**
 	 * Retrieves the value of the specified cookie.
 	 * @param name - The name of the cookie.
@@ -31,6 +29,10 @@
 		const value = `; ${document.cookie}`;
 		const parts = value.split(`; ${name}=`);
 		if (parts.length === 2) return parts.pop()?.split(';').shift();
+	}
+
+	function deleteCookie(name: string): void {
+		document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
 	}
 
 	// validate JWT access token
@@ -61,6 +63,14 @@
 {#if !accessToken}
 	<a {href}>Login</a>
 {:else}
-	<Cloud />
+	<button
+		on:click={() => {
+			deleteCookie('access_token');
+			accessToken = '';
+			goto('/');
+		}}
+	>
+		Logout
+	</button>
 	<Machine />
 {/if}

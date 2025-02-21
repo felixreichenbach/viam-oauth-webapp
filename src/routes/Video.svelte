@@ -4,6 +4,7 @@
 
 	export let machineClient: VIAM.RobotClient;
 	export let cameraName: string;
+
 	let videoElement: HTMLVideoElement | null = null;
 
 	async function getStream(): Promise<MediaStream | undefined> {
@@ -16,7 +17,6 @@
 		const stream = await getStream();
 		if (videoElement && stream) {
 			videoElement.srcObject = stream;
-			videoElement.play();
 		}
 	});
 </script>

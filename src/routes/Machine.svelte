@@ -2,13 +2,15 @@
 	import { getContext, onMount } from 'svelte';
 	import * as VIAM from '@viamrobotics/sdk';
 	import { goto } from '$app/navigation';
-
+	import { robotClientStore } from '../stores';
 	import { PUBLIC_MACHINE_URL } from '$env/static/public';
 	import Image from './Image.svelte';
 	import Video from './Video.svelte';
+	import { get } from 'svelte/store';
 
 	const host = PUBLIC_MACHINE_URL;
 	let accessToken: string;
+	let machineClient: VIAM.RobotClient | null = null;
 
 	/**
 	 * Connects to the Viam machine using the provided access token.
@@ -25,9 +27,9 @@
 				},
 				signalingAddress: 'https://app.viam.com:443'
 			});
+			robotClientStore.set(client);
 			return client;
 		} catch (error) {
-			console.log('FELIX');
 			throw new Error('Failed to connect to Viam Machine.');
 		}
 	}
@@ -36,25 +38,25 @@
 		accessToken = getContext('accessToken') as string;
 		if (!accessToken) {
 			goto('/');
+		} else {
+			machineClient = get(robotClientStore);
+			if (!machineClient) {
+				machineClient = await connectMachine(accessToken, host);
+			}
 		}
 	});
 </script>
 
 <h2>My Viam Machine</h2>
-{#await connectMachine(accessToken, host)}
+{#if machineClient}
+	{#if machineClient.isConnected()}
+		<h3>Camera Image</h3>
+		<Image {machineClient} cameraName="camera" />
+		<h3>Camera Video Stream</h3>
+		<Video {machineClient} cameraName="camera" />
+	{:else}
+		<p>Not connected to Viam Machine</p>
+	{/if}
+{:else}
 	<p>Connecting to Viam Machine...</p>
-{:then machineClient}
-	<h3>Viam Machine Metadata:</h3>
-	{#await machineClient.getCloudMetadata() then data}
-		<pre>{JSON.stringify(data, null, 2)}</pre>
-	{:catch error}
-		<p>Failed to get metadata from Viam Machine.</p>
-	{/await}
-	<h3>Camera Image</h3>
-	<Image {machineClient} />
-	<h3>Camera Video Stream</h3>
-	<Video {machineClient} cameraName="camera" />
-{:catch error}
-	<p>Failed to connect to Viam Machine.</p>
-	<p>{error.message}</p>
-{/await}
+{/if}
