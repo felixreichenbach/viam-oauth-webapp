@@ -46,3 +46,9 @@
 	<p>Getting image...</p>
 {/if}
 <button on:click={getImage}>Refresh Image</button>
+
+<style>
+	img {
+		width: 25%;
+	}
+</style>
