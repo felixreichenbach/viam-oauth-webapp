@@ -11,7 +11,7 @@
 	 * Fetches the image from the specified camera and updates the imageUrl.
 	 * @param name - The name of the camera.
 	 */
-	function getImage() {
+	export function getImage() {
 		try {
 			const camera = new VIAM.CameraClient(machineClient, cameraName);
 			camera.getImage().then((image) => {
@@ -45,10 +45,3 @@
 {:else}
 	<p>Getting image...</p>
 {/if}
-<button on:click={getImage}>Refresh Image</button>
-
-<style>
-	img {
-		width: 25%;
-	}
-</style>

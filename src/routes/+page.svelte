@@ -7,7 +7,7 @@
 		PUBLIC_FUSION_AUTH_URL,
 		PUBLIC_LOGIN_CALLBACK
 	} from '$env/static/public';
-	import Machine from './Machine.svelte';
+	import HPE from './HPE.svelte';
 	import Cloud from './Cloud.svelte';
 
 	// Construct the FusionAuth URL for OAuth authorization
@@ -87,6 +87,5 @@
 	>
 		Logout
 	</button>
-	<Cloud />
-	<Machine />
+	<HPE />
 {/if}
