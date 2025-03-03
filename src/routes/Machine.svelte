@@ -10,6 +10,8 @@
 	let accessToken: string;
 	let machineClient: VIAM.RobotClient | null = null;
 	let status: string = 'disconnected';
+	let cameraNames: string[] = [];
+	let selectedCameraName: string = '';
 
 	/**
 	 * Connects to the Viam machine using the provided access token.
@@ -29,12 +31,32 @@
 					payload: accessToken
 				},
 				signalingAddress: 'https://app.viam.com:443'
-			}).then((client) => {
-				machineClient = client;
-				status = 'connected';
-			});
+			})
+				.then((client) => {
+					machineClient = client;
+					status = 'connected';
+				})
+				.then(() => {
+					fetchCameraNames();
+				});
 		} catch (error) {
 			throw new Error('Failed to connect to Viam Machine.');
+		}
+	}
+
+	/**
+	 * Fetches the camera names from the Viam machine and updates the cameraNames array.
+	 * @param machineClient - The Viam machine client instance.
+	 */
+	async function fetchCameraNames() {
+		if (machineClient) {
+			const resources = await machineClient.resourceNames();
+			cameraNames = resources
+				.filter((resource) => resource.subtype === 'camera')
+				.map((resource) => resource.name);
+			if (cameraNames.length > 0) {
+				selectedCameraName = cameraNames[0];
+			}
 		}
 	}
 
@@ -66,6 +88,13 @@
 			}
 		}
 	});
+
+	// Reactive statement to log when selectedCameraName changes
+	$: {
+		if (selectedCameraName) {
+			console.log(`Selected camera name changed to: ${selectedCameraName}`);
+		}
+	}
 </script>
 
 <h2>My Viam Machine</h2>
@@ -73,11 +102,23 @@
 {#if status === 'connecting'}
 	<p>Connecting...</p>
 {:else if machineClient}
-	<h3>Camera Image</h3>
-	<Image {machineClient} cameraName="camera" />
-	<h3>Camera Video Stream</h3>
-	<Video {machineClient} cameraName="camera" />
-	<button on:click={disconnectMachine}>Disconnect</button>
+	{#if cameraNames.length > 1}
+		<h3>Select Camera</h3>
+		<select bind:value={selectedCameraName}>
+			{#each cameraNames as cameraName}
+				<option value={cameraName}>{cameraName}</option>
+			{/each}
+		</select>
+	{/if}
+	{#if selectedCameraName !== ''}
+		<h3>Camera Image</h3>
+		<Image {machineClient} cameraName={selectedCameraName} />
+		<h3>Camera Video Stream</h3>
+		<Video {machineClient} cameraName={selectedCameraName} />
+		<button on:click={disconnectMachine}>Disconnect</button>
+	{:else}
+		<p>Camera not available</p>
+	{/if}
 {:else}
 	<p>Machine disconnected</p>
 	<button on:click={() => connectMachine(accessToken, host)}>Connect</button>

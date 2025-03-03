@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import * as VIAM from '@viamrobotics/sdk';
 
 	export let machineClient: VIAM.RobotClient;
@@ -19,13 +18,10 @@
 		});
 	}
 
-	/**
-	 * Lifecycle function that runs when the component is mounted.
-	 * Calls the getStream function to fetch and display the video stream.
-	 */
-	onMount(() => {
+	// Reactive statement to fetch a new image whenever the cameraName changes
+	$: if (cameraName) {
 		getStream();
-	});
+	}
 </script>
 
 <video bind:this={videoElement} controls autoplay><track kind="captions" /></video>
