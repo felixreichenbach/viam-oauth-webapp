@@ -4,20 +4,27 @@
 
 	export let machineClient: VIAM.RobotClient;
 	export let cameraName: string;
+
 	let videoElement: HTMLVideoElement | null = null;
 
-	async function getStream(): Promise<MediaStream | undefined> {
+	/**
+	 * Fetches the video stream from the specified camera and attaches it to the video element.
+	 */
+	function getStream() {
 		const streamClient = new VIAM.StreamClient(machineClient);
-		const stream = await streamClient.getStream(cameraName);
-		return stream;
+		streamClient.getStream(cameraName).then((stream) => {
+			if (videoElement) {
+				videoElement.srcObject = stream;
+			}
+		});
 	}
 
-	onMount(async () => {
-		const stream = await getStream();
-		if (videoElement && stream) {
-			videoElement.srcObject = stream;
-			videoElement.play();
-		}
+	/**
+	 * Lifecycle function that runs when the component is mounted.
+	 * Calls the getStream function to fetch and display the video stream.
+	 */
+	onMount(() => {
+		getStream();
 	});
 </script>
 
