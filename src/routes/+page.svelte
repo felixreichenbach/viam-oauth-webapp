@@ -10,7 +10,8 @@
 	import Machine from './Machine.svelte';
 	import Cloud from './Cloud.svelte';
 
-	const href = encodeURI(
+	// Construct the FusionAuth URL for OAuth authorization
+	const fusionAuthURL = encodeURI(
 		PUBLIC_FUSION_AUTH_URL +
 			'/oauth2/authorize?client_id=' +
 			PUBLIC_FUSION_AUTH_CLIENT_ID +
@@ -31,12 +32,20 @@
 		if (parts.length === 2) return parts.pop()?.split(';').shift();
 	}
 
+	/**
+	 * Deletes the specified cookie by setting its expiration date to a past date.
+	 * @param name - The name of the cookie to delete.
+	 */
 	function deleteCookie(name: string): void {
 		document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+		accessToken = '';
 	}
 
-	// validate JWT access token
-	// TODO: Check if there is a better way such as catch from connection etc.
+	/**
+	 * Validates the JWT access token.
+	 * @param token - The JWT access token to validate.
+	 * @returns True if the token is valid, false otherwise.
+	 */
 	function isTokenValid(token: string): boolean {
 		try {
 			const decoded: any = jwtDecode(token);
@@ -47,6 +56,12 @@
 		}
 	}
 
+	/**
+	 * Lifecycle function that runs when the component is mounted.
+	 * Retrieves the access token from the cookie and validates it.
+	 * If the token is valid, sets the access token in the context.
+	 * If the token is invalid, redirects to the login page.
+	 */
 	onMount(async () => {
 		accessToken = getCookie('access_token');
 		if (accessToken) {
@@ -61,16 +76,17 @@
 
 <h1>Welcome to Viam OAuth</h1>
 {#if !accessToken}
-	<a {href}>Login</a>
+	<a href={fusionAuthURL}>Login</a>
 {:else}
 	<button
 		on:click={() => {
+			// TODO - logout from FusionAuth
 			deleteCookie('access_token');
-			accessToken = '';
 			goto('/');
 		}}
 	>
 		Logout
 	</button>
+	<Cloud />
 	<Machine />
 {/if}

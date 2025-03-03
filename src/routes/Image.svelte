@@ -8,29 +8,38 @@
 	let imageUrl: string | undefined;
 	let error: Error | undefined;
 
-	async function getImage(name: string) {
+	/**
+	 * Fetches the image from the specified camera and updates the imageUrl.
+	 * @param name - The name of the camera.
+	 */
+	function getImage(name: string) {
 		try {
 			const camera = new VIAM.CameraClient(machineClient, name);
-			const image = await camera.getImage();
-			const blob = new Blob([image], { type: 'image/jpeg' });
-			imageUrl = URL.createObjectURL(blob);
-			error = undefined;
+			camera.getImage().then((image) => {
+				const blob = new Blob([image], { type: 'image/jpeg' });
+				imageUrl = URL.createObjectURL(blob);
+				error = undefined;
+			});
 		} catch (err) {
 			if (err instanceof Error) {
+				console.log(err.message);
 				error = err;
 			} else {
+				console.log('An unknown error occurred');
 				error = new Error('An unknown error occurred');
 			}
 			imageUrl = undefined;
 		}
 	}
 
+	/**
+	 * Lifecycle function that runs when the component is mounted.
+	 * Calls the getImage function to fetch and display the initial image.
+	 */
 	onMount(() => {
-		getImage('camera'); // Replace 'camera' with your actual camera name
+		getImage(cameraName);
 	});
 </script>
-
-<button on:click={() => getImage(cameraName)}>Refresh Image</button>
 
 {#if error}
 	<p>Failed to get image from camera.</p>
@@ -40,3 +49,4 @@
 {:else}
 	<p>Getting image...</p>
 {/if}
+<button on:click={() => getImage(cameraName)}>Refresh Image</button>
