@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import * as VIAM from '@viamrobotics/sdk';
 
 	export let machineClient: VIAM.RobotClient;
@@ -12,9 +11,9 @@
 	 * Fetches the image from the specified camera and updates the imageUrl.
 	 * @param name - The name of the camera.
 	 */
-	function getImage(name: string) {
+	function getImage() {
 		try {
-			const camera = new VIAM.CameraClient(machineClient, name);
+			const camera = new VIAM.CameraClient(machineClient, cameraName);
 			camera.getImage().then((image) => {
 				const blob = new Blob([image], { type: 'image/jpeg' });
 				imageUrl = URL.createObjectURL(blob);
@@ -32,13 +31,10 @@
 		}
 	}
 
-	/**
-	 * Lifecycle function that runs when the component is mounted.
-	 * Calls the getImage function to fetch and display the initial image.
-	 */
-	onMount(() => {
-		getImage(cameraName);
-	});
+	// Reactive statement to fetch a new image whenever the cameraName changes
+	$: if (cameraName) {
+		getImage();
+	}
 </script>
 
 {#if error}
@@ -49,4 +45,4 @@
 {:else}
 	<p>Getting image...</p>
 {/if}
-<button on:click={() => getImage(cameraName)}>Refresh Image</button>
+<button on:click={getImage}>Refresh Image</button>
