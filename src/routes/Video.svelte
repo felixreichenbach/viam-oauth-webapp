@@ -25,3 +25,10 @@
 </script>
 
 <video bind:this={videoElement} controls autoplay><track kind="captions" /></video>
+
+<style>
+	video {
+		width: 50%;
+		height: auto;
+	}
+</style>

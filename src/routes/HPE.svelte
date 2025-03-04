@@ -152,14 +152,12 @@
 
 <style>
 	table {
-		width: 80%;
-		height: 1000px;
-	}
-	tr {
+		max-width: 80%;
+		table-layout: fixed;
 	}
 	td {
 		border: 1px solid black;
-		width: 50%;
 		text-align: center;
+		width: 50%;
 	}
 </style>

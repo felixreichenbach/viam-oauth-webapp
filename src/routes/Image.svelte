@@ -45,3 +45,10 @@
 {:else}
 	<p>Getting image...</p>
 {/if}
+
+<style>
+	img {
+		width: 50%;
+		height: auto;
+	}
+</style>
