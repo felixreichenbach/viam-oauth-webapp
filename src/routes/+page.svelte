@@ -89,3 +89,10 @@
 	</button>
 	<HPE />
 {/if}
+
+<style lang="postcss">
+	@reference "tailwindcss/theme";
+	:global(html) {
+		background-color: theme(--color-gray-100);
+	}
+</style>
