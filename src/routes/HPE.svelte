@@ -127,21 +127,19 @@
 	<p>Machine disconnected</p>
 {/if}
 
+<div>
+	{#if selectedCameraName !== '' && machineClient}
+		<ComputerVision bind:this={imageComponent} {machineClient} cameraName={selectedCameraName} />
+		<button onclick={getImage}>Refresh Image</button><br /><br /><button>ACCEPT</button>
+	{:else}
+		<p>Camera not available</p>
+	{/if}
+</div>
+
 <table>
 	<tbody>
 		<tr>
-			<td>
-				{#if selectedCameraName !== '' && machineClient}
-					<ComputerVision
-						bind:this={imageComponent}
-						{machineClient}
-						cameraName={selectedCameraName}
-					/>
-				{:else}
-					<p>Camera not available</p>
-				{/if}</td
-			>
-			<td><h3>Sealant Quality Data</h3></td>
+			<td> </td>
 		</tr>
 		<tr>
 			<td>
@@ -151,7 +149,7 @@
 					<p>Camera not available</p>
 				{/if}</td
 			>
-			<td><button onclick={getImage}>Refresh Image</button><br /><br /><button>ACCEPT</button></td>
+			<td></td>
 		</tr>
 	</tbody>
 </table>
@@ -159,7 +157,6 @@
 <style>
 	table {
 		max-width: 80%;
-		table-layout: fixed;
 	}
 	td {
 		border: 1px solid black;
