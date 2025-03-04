@@ -5,13 +5,19 @@
 	export let cameraName: string;
 
 	let videoElement: HTMLVideoElement | null = null;
+	let streamClient: VIAM.StreamClient | null = null;
+	let currentStream: MediaStream | null = null;
 
 	/**
 	 * Fetches the video stream from the specified camera and attaches it to the video element.
 	 */
 	function getStream() {
-		const streamClient = new VIAM.StreamClient(machineClient);
+		if (streamClient && currentStream) {
+			streamClient.remove(currentStream.id);
+		}
+		streamClient = new VIAM.StreamClient(machineClient);
 		streamClient.getStream(cameraName).then((stream) => {
+			currentStream = stream;
 			if (videoElement) {
 				videoElement.srcObject = stream;
 			}

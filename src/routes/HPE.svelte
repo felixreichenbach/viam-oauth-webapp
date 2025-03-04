@@ -5,6 +5,7 @@
 	import { PUBLIC_MACHINE_URL } from '$env/static/public';
 	import Image from './Image.svelte';
 	import Video from './Video.svelte';
+	import ComputerVision from './ComputerVision.svelte';
 
 	const host = PUBLIC_MACHINE_URL;
 	let accessToken: string;
@@ -53,6 +54,7 @@
 	async function fetchCameraNames() {
 		if (machineClient) {
 			const resources = await machineClient.resourceNames();
+			console.log(resources);
 			cameraNames = resources
 				.filter((resource) => resource.subtype === 'camera')
 				.map((resource) => resource.name);
@@ -130,7 +132,11 @@
 		<tr>
 			<td>
 				{#if selectedCameraName !== '' && machineClient}
-					<Image bind:this={imageComponent} {machineClient} cameraName={selectedCameraName} />
+					<ComputerVision
+						bind:this={imageComponent}
+						{machineClient}
+						cameraName={selectedCameraName}
+					/>
 				{:else}
 					<p>Camera not available</p>
 				{/if}</td
